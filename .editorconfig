@@ -1,0 +1,29 @@
+[{*.tf,*.hcl}]
+indent_size = 3
+ij_hcl-terraform_property_alignment = 3
+ij_hcl-terraform_array_wrapping = 0
+ij_hcl-terraform_object_wrapping = 0
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+
+[{*.tfvars,*.tfvars.json}]
+indent_size = 3
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+
+[*.go]
+indent_size = 3
+indent_style = tab
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+
+[*.json]
+indent_size = 3
+
+[{*.yml,*.yaml}]
+indent_size = 3
