@@ -67,5 +67,5 @@ services:
       target: 601
     restart: always
     volumes:
-    - ./config/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro
+    - ./config/syslog-ng.old.conf:/etc/syslog-ng/syslog-ng.old.conf:ro
 version: '3.3'

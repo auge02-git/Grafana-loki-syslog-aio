@@ -1,0 +1,122 @@
+logging {
+    level = "debug"
+    format = "logfmt"
+}
+
+prometheus.remote_write "local" {
+  endpoint {
+    // url = "http://127.0.0.1:9090/api/v1/push"
+    url = "http://127.0.0.1:9201/read"
+  }
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://127.0.0.1:3100/loki/api/v1/push"
+  }
+}
+
+// local tempo service must install are stop and disabled, but self port warning
+otelcol.exporter.otlp "local" {
+  client {
+    endpoint = "127.0.0.1:4317"
+  }
+}
+
+/*
+pyroscope.write "local" {
+  endpoint {
+    url = "http://pyroscope:4100"
+  }
+}
+*/
+
+otelcol.exporter.prometheus "to_prometheus" {
+  forward_to = [
+    prometheus.remote_write.local.receiver,
+  ]
+}
+
+otelcol.exporter.loki "to_loki" {
+  forward_to = [
+    loki.write.local.receiver,
+  ]
+  /*
+  forward_to = [
+    grafana_cloud.stack.receivers.logs,
+  ]
+  */
+}
+
+otelcol.receiver.otlp "default" {
+  grpc {}
+  http {}
+  output {
+    metrics = [otelcol.exporter.prometheus.to_prometheus.input]
+    logs = [otelcol.exporter.loki.to_loki.input]
+    traces = [otelcol.exporter.otlp.local.input]
+  }
+}
+
+// --------- (syslog parsing and writes) -----------
+
+discovery.relabel "syslog" {
+        targets = []
+
+        rule {
+                source_labels = ["__syslog_message_hostname"]
+                target_label  = "host"
+        }
+
+        rule {
+                source_labels = ["__syslog_message_hostname"]
+                target_label  = "hostname"
+        }
+
+        rule {
+                source_labels = ["__syslog_message_severity"]
+                target_label  = "level"
+        }
+
+        rule {
+                source_labels = ["__syslog_message_app_name"]
+                target_label  = "application"
+        }
+
+        rule {
+                source_labels = ["__syslog_message_facility"]
+                target_label  = "facility"
+        }
+
+        rule {
+                source_labels = ["__syslog_connection_hostname"]
+                target_label  = "connection_hostname"
+        }
+}
+
+loki.source.syslog "syslog" {
+        listener {
+                address      = "0.0.0.0:1601"
+                protocol     = "tcp"
+                idle_timeout = "0s"
+                use_rfc5424_message = true
+                labels       = { job = "syslog", component = "loki.source.syslog", protocol = "tcp" }
+                max_message_length = 0
+        }
+        listener {
+                address      = "0.0.0.0:1514"
+                protocol     = "udp"
+                idle_timeout = "0s"
+                use_rfc5424_message = true
+                labels       = { job = "syslog", component = "loki.source.syslog", protocol = "udp" }
+                max_message_length = 0
+        }
+        forward_to    = [loki.write.syslog.receiver]
+        relabel_rules = discovery.relabel.syslog.rules
+}
+
+loki.write "syslog" {
+        endpoint {
+                url = "http://127.0.0.1:3100/loki/api/v1/push"
+        }
+}

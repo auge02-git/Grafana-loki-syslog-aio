@@ -1,0 +1,11 @@
+server:
+  http_listen_port: 4040
+  grpc_listen_port: 0
+  # http_listen_address: 172.16.0.102
+  log_level: info
+
+pyroscopedb:
+  data_path: /mnt/lokidata/fs_pyroscope
+
+analytics:
+  reporting_enabled: false
