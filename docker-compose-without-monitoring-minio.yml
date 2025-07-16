@@ -1,15 +1,18 @@
+version: '3.3'
+
 networks:
   loki: {}
 services:
   grafana:
     container_name: grafana
+    ## image: grafana/grafana:8.1.2
+    image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_GRAFANA_REPO}:${IMAGE_GRAFANA_VERSION}
     environment:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
       GF_AUTH_BASIC_ENABLED: "false"
       GF_AUTH_DISABLE_LOGIN_FORM: "true"
       GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/no_folder/loki_syslog_aio_overview.json
-    image: grafana/grafana:8.1.2
     networks:
       loki: null
     ports:
@@ -24,9 +27,12 @@ services:
   loki:
     command: -config.file=/etc/loki/loki-config.yml
     container_name: loki
-#    depends_on:
-#    - minio
-    image: grafana/loki:2.3.0
+    depends_on:
+       - loki
+       - tempo
+       - alloy
+    ## image: grafana/loki:2.3.0
+    image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_LOKI_REPO}:${IMAGE_LOKI_VERSION}
     networks:
       loki: null
     ports:
@@ -35,7 +41,7 @@ services:
       target: 3100
     restart: always
     volumes:
-    - ./config/loki-config-s3.yml:/etc/loki/loki-config.yml:ro
+    - ./config/loki-config-ram.yml:/etc/loki/loki-config.yml:ro
 #  minio:
 #    command: -c 'mkdir -p /data/loki && /usr/bin/docker-entrypoint.sh minio server /data'
 #    container_name: minio
@@ -60,38 +66,58 @@ services:
 #    - published: 9000
 #      target: 9000
 #    restart: always
-  promtail:
-    command: -config.file=/etc/promtail/promtail-config.yml
-    container_name: promtail
-    image: grafana/promtail:2.3.0
-    networks:
-      loki: null
-    ports:
-    - protocol: tcp
-      published: 1514
-      target: 1514
-    - protocol: tcp
-      published: 9080
-      target: 9080
-    restart: always
-    volumes:
-    - ./config/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
-  syslog-ng:
-    command: -edv
-    container_name: syslog-ng
-    depends_on:
-    - promtail
-    image: balabit/syslog-ng:latest
+#  promtail:
+#    command: -config.file=/etc/promtail/promtail-config.yml
+#    container_name: promtail
+#    image: grafana/promtail:2.3.0
+#    networks:
+#      loki: null
+#    ports:
+#    - protocol: tcp
+#      published: 1514
+#      target: 1514
+#    - protocol: tcp
+#      published: 9080
+#      target: 9080
+#    restart: always
+#    volumes:
+#    - ./config/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+  alloy:
+    command: -config.file=/etc/alloy/config.alloy
+    container_name: alloy
+    ## image: grafana/alloy:2.3.0
+    image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_ALLOY_REPO}:${IMAGE_ALLOY_VERSION}
     networks:
       loki: null
     ports:
     - protocol: udp
-      published: 514
-      target: 514
+      published: 1514
+      target: 1514
     - protocol: tcp
-      published: 601
-      target: 601
+      published: 1601
+      target: 1601
+    - protocol: tcp
+      published: 12345
+      target: 12345
     restart: always
     volumes:
-    - ./config/syslog-ng.old.conf:/etc/syslog-ng/syslog-ng.old.conf:ro
-version: '3.3'
+    - ./config/alloy-config.yml:/etc/alloy/config.alloy:ro
+#  syslog-ng:
+#    command: -edv
+#    container_name: syslog-ng
+#    depends_on:
+#    - promtail
+#    image: balabit/syslog-ng:latest
+#    networks:
+#      loki: null
+#    ports:
+#    - protocol: udp
+#      published: 514
+#      target: 514
+#    - protocol: tcp
+#      published: 601
+#      target: 601
+#    restart: always
+#    volumes:
+#    - ./config/syslog-ng.old.conf:/etc/syslog-ng/syslog-ng.old.conf:ro
+
