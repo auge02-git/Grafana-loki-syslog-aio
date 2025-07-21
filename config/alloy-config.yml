@@ -17,11 +17,13 @@ loki.write "local" {
 }
 
 // local tempo service must install are stop and disabled, but self port warning
+/*
 otelcol.exporter.otlp "local" {
   client {
     endpoint = "127.0.0.1:4317"
   }
 }
+*/
 
 pyroscope.write "local" {
   endpoint {
@@ -52,7 +54,7 @@ otelcol.receiver.otlp "default" {
   output {
     metrics = [otelcol.exporter.prometheus.to_prometheus.input]
     logs = [otelcol.exporter.loki.to_loki.input]
-    traces = [otelcol.exporter.otlp.local.input]
+    ## traces = [otelcol.exporter.otlp.local.input]
   }
 }
 
