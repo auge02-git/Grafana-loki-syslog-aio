@@ -44,7 +44,8 @@ services:
       deploy:
          placement:
             constraints:
-               - node.role==manager
+                # - node.role==manager
+                - node.hostname == ${HOSTNAME}
          restart_policy:
             condition: on-failure
 
@@ -63,6 +64,10 @@ services:
       restart: always
       volumes:
          - ./config/blackbox.yml:/etc/blackbox_exporter/config.yml:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
 
    grafana:
       container_name: grafana
@@ -89,6 +94,10 @@ services:
          - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
          - ./config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
          - ./config/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
 
    loki:
       container_name: loki
@@ -110,6 +119,10 @@ services:
          - ./config/loki-config-ram.yml:/etc/loki/loki-config.yml:ro
          ## - ./config/loki-config-filesystem.yml:/etc/loki/loki-config.yml:ro
          ## - ./config/loki-config-s3.yml:/etc/loki/loki-config.yml:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
 
    alloy:
       command: -config.file=/etc/alloy/config.alloy
@@ -131,6 +144,10 @@ services:
       restart: always
       volumes:
          - ./config/alloy-config.yml:/etc/alloy/config.alloy:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
 
    tempo:
       command: -config.file=/etc/tempo/tempo-config.yml
@@ -146,6 +163,10 @@ services:
       restart: always
       volumes:
          - ./config/tempo-config.yml:/etc/tempo/tempo-config.yml:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
 
    pyroscope:
       command: -config.file=/etc/pyroscope/pyroscope-config.yml
@@ -161,12 +182,16 @@ services:
       restart: always
       volumes:
          - ./config/pyroscope-config.yml:/etc/pyroscope/pyroscope-config.yml:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
 
 #  syslog-ng:
 #    command: -edv
 #    container_name: syslog-ng
 #    depends_on:
-#    - promtail
+#    - alloy
 #    image: balabit/syslog-ng:latest
 #    networks:
 #      loki: null
