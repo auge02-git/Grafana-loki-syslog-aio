@@ -40,7 +40,7 @@ loki.process "add_new_label" {
 // Anything that comes into this component gets written to the loki remote API
 loki.write "local_loki" {
     endpoint {
-        url = "http://192.168.202.100:3100/loki/api/v1/push"
+        url = "http://loki:3100/loki/api/v1/push"
     }
 }
 
