@@ -9,6 +9,10 @@
 
 This Loki Syslog All-In-One example is geared to help you get up and running quickly with a Syslog ingestor and visualization of logs. It uses [Grafana Loki](https://grafana.com/oss/loki/) and Alloy as a receiver for forwarded syslog-ng logs. 
 
+<center><img src="https://grafana.com/media/docs/alloy/alloy_diagram_v2.svg"></center>
+
+And the Stack into on this deployment.
+
 <center><img src="https://github.com/Datenlabor-des-Auswaertigen-Amtes/grafana-loki-syslog-aio.git"></center>
 
 *Note that this All In One is geared towards getting network traffic from legacy syslog (RFC3164 UDP port 2514) into Loki via [syslog-ng](https://www.syslog-ng.com/) and [Alloy](https://grafana.com/docs/alloy/latest/).*
