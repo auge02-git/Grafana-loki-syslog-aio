@@ -1,4 +1,4 @@
-version: '3'
+# version: '3'
 ## version: '3.3'
 
 volumes:
@@ -13,11 +13,11 @@ services:
       image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_PROMETHEUS_REPO}:${IMAGE_PROMETHEUS_VERSION}
       ports:
          - 9090:9090
-      links:
-         - alertmanager:alertmanager
+#      links:
+#         - alertmanager:alertmanager
       #         - cadvisor:cadvisor
-      #      depends_on:
-      #         - cadvisor
+      depends_on:
+         - alertmanager
       networks:
          loki: null
       command:
@@ -57,9 +57,9 @@ services:
             condition: on-failure
 
    blackbox_exporter:
-      container_name: blackbox_exporter
       ## image: prom/blackbox-exporter:v0.18.0
       image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_BLACKBOX_EXPORTER_REPO}:${IMAGE_BLACKBOX_EXPORTER_VERSION}
+      container_name: blackbox_exporter
       depends_on:
          - prometheus
       networks:
@@ -79,9 +79,9 @@ services:
             condition: on-failure
 
    grafana:
-      container_name: grafana
       ## image: grafana/grafana:8.1.2
       image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_GRAFANA_REPO}:${IMAGE_GRAFANA_VERSION}
+      container_name: grafana
       depends_on:
          - prometheus
          - loki
@@ -111,9 +111,9 @@ services:
             condition: on-failure
 
    loki:
-      container_name: loki
       ## image: grafana/loki:2.3.0
       image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_LOKI_REPO}:${IMAGE_LOKI_VERSION}
+      container_name: loki
       depends_on:
          - tempo
          - alloy
@@ -137,10 +137,10 @@ services:
             condition: on-failure
 
    alloy:
-      command: -config.file=/etc/alloy/config.alloy
-      container_name: alloy
       ## image: grafana/alloy:2.3.0
       image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_ALLOY_REPO}:${IMAGE_ALLOY_VERSION}
+      ## command: -config.file=/etc/alloy/config.alloy
+      container_name: alloy
       networks:
          loki: null
       ports:
@@ -164,10 +164,10 @@ services:
             condition: on-failure
 
    tempo:
-      command: -config.file=/etc/tempo/tempo-config.yml
-      container_name: tempo
       ## image: grafana/tempo:0.8.0
       image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_TEMPO_REPO}:${IMAGE_TEMPO_VERSION}
+      command: -config.file=/etc/tempo/tempo-config.yml
+      container_name: tempo
       networks:
          loki: null
       ports:
@@ -206,12 +206,12 @@ services:
             condition: on-failure
 
    syslog-ng:
+      ## image: balabit/syslog-ng:latest
+      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_SYSLOG_NG_REPO}:${IMAGE_SYSLOG_NG_VERSION}
       command: -edv
       container_name: syslog-ng
 #      depends_on:
 #         - promtail
-      ## image: balabit/syslog-ng:latest
-      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_SYSLOG_NG_REPO}:${IMAGE_SYSLOG_NG_VERSION}
       networks:
          loki: null
       ports:
