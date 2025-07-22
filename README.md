@@ -1,9 +1,9 @@
 
 ## grafana-loki-syslog-aio
 
-<img src="https://github.com/Datenlabor-des-Auswaertigen-Amtes/grafana-loki-syslog-aio/blob/main/loki_syslog_aio.png">
+<img src="https://github.com/auge02-git/Grafana-loki-syslog-aio/blob/main/loki_syslog_aio.png">
 
-**greate Thnks on a old maintainers of based version (Dave Schmid)**
+**greate Thanks on a old maintainers of based version (Dave Schmid)**
 
 ## About The Project
 
@@ -11,9 +11,9 @@ This Loki Syslog All-In-One example is geared to help you get up and running qui
 
 <img src="https://grafana.com/media/docs/alloy/alloy_diagram_v2.svg">
 
-And the Stack into on this deployment.
+And the Stack into on this deployment, from main-branch.
 
-<img src="https://github.com/Datenlabor-des-Auswaertigen-Amtes/grafana-loki-syslog-aio.git">
+<img src="https://github.com/auge02-git/Grafana-loki-syslog-aio.git">
 
 *Note that this All In One is geared towards getting network traffic from legacy syslog (RFC3164 UDP port 2514) into Loki via [syslog-ng](https://www.syslog-ng.com/) and [Alloy](https://grafana.com/docs/alloy/latest/).*
 
@@ -47,7 +47,7 @@ A simple Syslog generator is included based on Vicente Zepeda Mas's [random-logg
 
 This project is built and tested on Linux Rockylinux 9.5. To get started, download the code from this repository and extract it into an empty directory. For example:
 
-    wget https://github.com/Datenlabor-des-Auswaertigen-Amtes/grafana-loki-syslog-aio/archive/main.zip
+    wget https://github.com/auge02-git/Grafana-loki-syslog-aio/archive/main.zip
     unzip main.zip
     cd grafana-loki-syslog-aio-main
     
@@ -97,7 +97,7 @@ A few other docker-compose files are also available:
 
 The *Syslog Generator* configuration will need access to the Internet to do a local docker build from the configurations location in ./generator. It'll provide some named hosts and random INFO, WARN, DEBUG, ERROR logs sent over to syslog-ng/Loki.
 
-<center><img src="https://github.com/Datenlabor-des-Auswaertigen-Amtes/grafana-loki-syslog-aio/blob/main/loki_syslog_aio_overview_generator_sized.png"></center>
+<img src="https://github.com/auge02-git/Grafana-loki-syslog-aio/blob/main/loki_syslog_aio_overview_generator_sized.png">
 
 ## Configuration Review:
 
@@ -197,7 +197,7 @@ Maintainer: André Wolff - [@auge02-git](https://github.com/auge02-git) - andre@
 
 Old-Developer (greate thanks): Dave Schmid - [@lux4rd0](https://twitter.com/lux4rd0) - dave@pulpfree.org
 
-Project Link: https://github.com/Datenlabor-des-Auswaertigen-Amtes/grafana-loki-syslog-aio
+Project Link: https://github.com/auge02-git/Grafana-loki-syslog-aio
 
 ## Acknowledgements
 
