@@ -70,10 +70,10 @@ services:
       interval: 30s
       retries: 3
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:9000/minio/health/live
+         - "CMD"
+         - "curl"
+         - "-f"
+         - "http://localhost:9000/minio/health/live"
       timeout: 20s
     image: minio/minio:latest
     networks:
