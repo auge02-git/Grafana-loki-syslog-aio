@@ -13,7 +13,7 @@ This Loki Syslog All-In-One example is geared to help you get up and running qui
 
 And the Stack into on this deployment, from branch "main".
 
-<img src="https://github.com/auge02-git/Grafana-loki-syslog-aio/blob/main/loki_syslog_aio_overview.png">
+<img src="https://github.com/auge02-git/Grafana-loki-syslog-aio/blob/main/loki_syslog_aio_overview_sized.png">
 
 *Note that this All In One is geared towards getting network traffic from legacy syslog (RFC3164 UDP port 2514) into Loki via [syslog-ng](https://www.syslog-ng.com/) and [Alloy](https://grafana.com/docs/alloy/latest/).*
 
