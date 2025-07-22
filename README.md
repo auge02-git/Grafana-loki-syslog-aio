@@ -13,7 +13,7 @@ This Loki Syslog All-In-One example is geared to help you get up and running qui
 
 And the Stack into on this deployment, from main-branch.
 
-<img src="https://github.com/auge02-git/Grafana-loki-syslog-aio.git">
+<img src="https://github.com/auge02-git/Grafana-loki-syslog-aio/blob/main/loki_syslog_aio_overview.png">
 
 *Note that this All In One is geared towards getting network traffic from legacy syslog (RFC3164 UDP port 2514) into Loki via [syslog-ng](https://www.syslog-ng.com/) and [Alloy](https://grafana.com/docs/alloy/latest/).*
 
@@ -63,7 +63,7 @@ This will start to download all of the needed application containers and start t
 
 **Grafana Dashboards**
 
-Once all of the docker containers are started up, point your Web browser to the Grafana page, typically http://hostname:3000/ - with hostname being the name of the server you ran the docker-compose up -d command on. The "Loki Syslog AIO - Overview" dashboard is defaulted without having to log in.
+Once all of the docker containers are started up, point your Web browser to the Grafana page, typically http://grafana:3000/ - with hostname being the name of the server you ran the docker-compose up -d command on. The "Loki Syslog AIO - Overview" dashboard is defaulted without having to log in.
 
 *Note: this docker-compose stack is designed to be as easy as possible to deploy and go. Logins have been disabled, and the default user has an admin role. This can be changed to an Editor or Viewer role by changing the Grafana environmental variable in the docker-compose.yml file to:*
 
@@ -122,7 +122,7 @@ The MinIO configurations default the Access Key and Secret Key at startup. If yo
 
 ./config/loki-config-filesystem.yml      // actual using
 
-## Changed Default Configurations In syslog-ng and Promtail
+## Changed Default Configurations In syslog-ng and Promtail (is deprecated)
 
 To set this example All In One project up, the following configurations have been added to the docker-compose.yml. If you already have syslog-ng running on your deployment server - make similar changes below and comment out the docker container stanza.
 
