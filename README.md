@@ -11,7 +11,7 @@ This Loki Syslog All-In-One example is geared to help you get up and running qui
 
 <img src="https://grafana.com/media/docs/alloy/alloy_diagram_v2.svg">
 
-And the Stack into on this deployment, from main-branch.
+And the Stack into on this deployment, from branch "main".
 
 <img src="https://github.com/auge02-git/Grafana-loki-syslog-aio/blob/main/loki_syslog_aio_overview.png">
 
@@ -24,7 +24,7 @@ Essentially:
 
 ## Getting Started
 
-The project is built around a pre-configured Docker-/Kubernetes- stack of the following:
+The project is built around a pre-configured Docker-/Kubernetes-Stack of the following:
 
  - [Grafana](https://grafana.com/oss/grafana/)
  - [Grafana Loki](https://grafana.com/oss/loki/) (configured for [MinIO](https://min.io/))
@@ -193,7 +193,7 @@ Contributions make the open source community such a fantastic place to learn, in
 
 ## Contact
 
-Maintainer: André Wolff - [@auge02-git](https://github.com/auge02-git) - andre@auge02.de
+Maintainer: André Wolff - [@awo](https://github.com/auge02-git) - andre[at]auge02.de
 
 Old-Developer (greate thanks): Dave Schmid - [@lux4rd0](https://twitter.com/lux4rd0) - dave@pulpfree.org
 
