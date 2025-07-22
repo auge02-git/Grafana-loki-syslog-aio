@@ -1,4 +1,9 @@
-version: '3.3'
+version: '3'
+## version: '3.3'
+
+volumes:
+   prometheus_data: {}
+
 
 networks:
    loki: { }
@@ -39,7 +44,7 @@ services:
       volumes:
          - "./alertmanager/:/etc/alertmanager/"
       networks:
-         - monitor-net
+         loki: null
       command:
          - '--config.file=/etc/alertmanager/config.yml'
          - '--storage.path=/alertmanager'
@@ -110,7 +115,6 @@ services:
       ## image: grafana/loki:2.3.0
       image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_LOKI_REPO}:${IMAGE_LOKI_VERSION}
       depends_on:
-         - loki
          - tempo
          - alloy
       networks:
@@ -181,10 +185,10 @@ services:
             condition: on-failure
 
    pyroscope:
-      command: -config.file=/etc/pyroscope/pyroscope-config.yml
-      container_name: pyroscope
       ## image: pyroscope/pyroscope:0.9.0
       image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_PYROSCOPE_REPO}:${IMAGE_PYROSCOPE_VERSION}
+      ## command: -config.file=/etc/pyroscope/pyroscope-config.yml
+      container_name: pyroscope
       networks:
          loki: null
       ports:
@@ -193,7 +197,7 @@ services:
             target: 4040
       restart: always
       volumes:
-         - ./config/pyroscope-config.yml:/etc/pyroscope/pyroscope-config.yml:ro
+         - ./config/pyroscope-config.yml:/etc/pyroscope/config.yaml:ro
       deploy:
          placement:
             constraints:
@@ -204,8 +208,8 @@ services:
    syslog-ng:
       command: -edv
       container_name: syslog-ng
-      depends_on:
-         - promtail
+#      depends_on:
+#         - promtail
       ## image: balabit/syslog-ng:latest
       image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_SYSLOG_NG_REPO}:${IMAGE_SYSLOG_NG_VERSION}
       networks:
