@@ -1,0 +1,10 @@
+* text=auto
+*.sh text eol=lf
+*.yml text eol=lf
+inventories/environment-mce/host_vars/rancher-mgmt-cluster/tls-rancher-ingress.yaml export-ignore
+inventories/environment-mce/host_vars/rancher-mgmt-cluster/trust-mcenergie-internal-ca.yaml export-ignore
+inventories/environment-mce/host_vars/rancher-mgmt-cluster/tls-mcenergie-internal.yaml export-ignore
+*.yaml text eol=lf
+*.hcl text eol=lf
+*.tf text eol=lf
+Dockerfile text eol=lf

@@ -1,0 +1,208 @@
+version: '3.3'
+
+networks:
+   loki: { }
+services:
+   prometheus:
+      ## image: prom/prometheus:v2.31.0
+      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_PROMETHEUS_REPO}:${IMAGE_PROMETHEUS_VERSION}
+      ports:
+         - 9090:9090
+      links:
+         - alertmanager:alertmanager
+      #         - cadvisor:cadvisor
+      #      depends_on:
+      #         - cadvisor
+      networks:
+         loki: null
+      command:
+         - '--config.file=/etc/prometheus/prometheus.yml'
+         - '--storage.tsdb.path=/prometheus'
+         - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+         - '--web.console.templates=/usr/share/prometheus/consoles'
+      volumes:
+         - ./prometheus/:/etc/prometheus/
+         - prometheus_data:/prometheus
+      restart: always
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
+
+   alertmanager:
+      ## image: prom/alertmanager
+      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_ALERTMANAGER_REPO}:${IMAGE_ALERTMANAGER_VERSION}
+      ports:
+         - 9093:9093
+      volumes:
+         - "./alertmanager/:/etc/alertmanager/"
+      networks:
+         - monitor-net
+      command:
+         - '--config.file=/etc/alertmanager/config.yml'
+         - '--storage.path=/alertmanager'
+      deploy:
+         placement:
+            constraints:
+                # - node.role==manager
+                - node.hostname == ${HOSTNAME}
+         restart_policy:
+            condition: on-failure
+
+   blackbox_exporter:
+      container_name: blackbox_exporter
+      ## image: prom/blackbox-exporter:v0.18.0
+      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_BLACKBOX_EXPORTER_REPO}:${IMAGE_BLACKBOX_EXPORTER_VERSION}
+      depends_on:
+        - prometheus
+      networks:
+         loki: null
+      ports:
+         -  protocol: tcp
+            published: 9115
+            target: 9115
+      restart: always
+      volumes:
+         - ./config/blackbox.yml:/etc/blackbox_exporter/config.yml:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
+
+   grafana:
+      container_name: grafana
+      ## image: grafana/grafana:8.1.2
+      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_GRAFANA_REPO}:${IMAGE_GRAFANA_VERSION}
+      depends_on:
+         - prometheus
+         - loki
+         - tempo
+      environment:
+         GF_AUTH_ANONYMOUS_ENABLED: "true"
+         GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+         GF_AUTH_BASIC_ENABLED: "false"
+         GF_AUTH_DISABLE_LOGIN_FORM: "true"
+         GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/no_folder/loki_syslog_aio_overview.json
+      networks:
+         loki: null
+      ports:
+         -  protocol: tcp
+            published: 3000
+            target: 3000
+      restart: always
+      volumes:
+         - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+         - ./config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+         - ./config/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
+
+   loki:
+      container_name: loki
+      ## image: grafana/loki:2.3.0
+      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_LOKI_REPO}:${IMAGE_LOKI_VERSION}
+      depends_on:
+         - loki
+         - tempo
+         - alloy
+      networks:
+         loki: null
+      ports:
+         -  protocol: tcp
+            published: 3100
+            target: 3100
+      restart: always
+      command: -config.file=/etc/loki/loki-config.yml
+      volumes:
+         - ./config/loki-config-ram.yml:/etc/loki/loki-config.yml:ro
+         ## - ./config/loki-config-filesystem.yml:/etc/loki/loki-config.yml:ro
+         ## - ./config/loki-config-s3.yml:/etc/loki/loki-config.yml:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
+
+   alloy:
+      command: -config.file=/etc/alloy/config.alloy
+      container_name: alloy
+      ## image: grafana/alloy:2.3.0
+      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_ALLOY_REPO}:${IMAGE_ALLOY_VERSION}
+      networks:
+         loki: null
+      ports:
+         -  protocol: udp
+            published: 1514
+            target: 1514
+         -  protocol: tcp
+            published: 1601
+            target: 1601
+         -  protocol: tcp
+            published: 12345
+            target: 12345
+      restart: always
+      volumes:
+         - ./config/alloy-config.yml:/etc/alloy/config.alloy:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
+
+   tempo:
+      command: -config.file=/etc/tempo/tempo-config.yml
+      container_name: tempo
+      ## image: grafana/tempo:0.8.0
+      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_TEMPO_REPO}:${IMAGE_TEMPO_VERSION}
+      networks:
+         loki: null
+      ports:
+         -  protocol: tcp
+            published: 3200
+            target: 3200
+      restart: always
+      volumes:
+         - ./config/tempo-config.yml:/etc/tempo/tempo-config.yml:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
+
+   pyroscope:
+      command: -config.file=/etc/pyroscope/pyroscope-config.yml
+      container_name: pyroscope
+      ## image: pyroscope/pyroscope:0.9.0
+      image: ${IMAGE_ARTIFACTORY_PREFIX}${IMAGE_PYROSCOPE_REPO}:${IMAGE_PYROSCOPE_VERSION}
+      networks:
+         loki: null
+      ports:
+         -  protocol: tcp
+            published: 4040
+            target: 4040
+      restart: always
+      volumes:
+         - ./config/pyroscope-config.yml:/etc/pyroscope/pyroscope-config.yml:ro
+      deploy:
+         placement:
+            constraints:
+               - node.hostname == ${HOSTNAME}
+
+#  syslog-ng:
+#    command: -edv
+#    container_name: syslog-ng
+#    depends_on:
+#    - alloy
+#    image: balabit/syslog-ng:latest
+#    networks:
+#      loki: null
+#    ports:
+#    - protocol: udp
+#      published: 514
+#      target: 514
+#    - protocol: tcp
+#      published: 601
+#      target: 601
+#    restart: always
+#    volumes:
+#    - ./config/syslog-ng.old.conf:/etc/syslog-ng/syslog-ng.old.conf:ro
+

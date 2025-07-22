@@ -1,0 +1,24 @@
+---
+use_default_rules: true
+
+skip_list:
+  - role-name
+  # must be fixed at later time
+  - var-naming
+
+exclude_paths:
+  # skip original Playbooks from ansible lints
+  - ./*yml
+  - .github
+  - .vscode
+  - .idea
+  - dbhome-conversion
+  - group_vars
+  - host_vars
+  - inventory
+  - library
+
+warn_list:  # or 'skip_list' to silence them completely
+  - command-instead-of-shell  # Use shell only when shell functionality is required
+  - no-changed-when  # Commands should not change things if nothing needs doing
+  - role-name  # Role name {0} does not match ``^[a-z][a-z0-9_]+$`` pattern

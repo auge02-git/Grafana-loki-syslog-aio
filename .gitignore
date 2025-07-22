@@ -1,0 +1,79 @@
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+.terraform.lock.hcl
+
+**/.terragrunt-cache/
+
+# Crash log files
+crash.log
+
+# Ignore any .tfvars files that are generated automatically for each Terraform run. Most
+# .tfvars files are managed as part of configuration and so should be included in
+# version control.
+#
+# example.tfvars
+
+# workspace setup not on project kontext
+
+**/.vscode/
+/.idea/
+**/.idea/
+**/.aws/
+
+# optional parts on workspace setup (can included)
+## .editorconfig
+# any linting not over repos controlled
+## .*lint
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+_git/
+__git/
+___git/
+_github/
+_gitlab-ci.yml
+_gitignore
+
+### terraform (v2 more) ###
+terraform/.terraform/
+terraform/.terraform*
+terraform/tf_modules*
+terraform/plan.tfplan
+terraform/tfplan.json
+/terraform/provider.tf
+/terraform/.terraform/
+/terraform/grafana/dashboards/stable/kubernetes/meta_file.txt
+
+*.tfplan
+
+### local ignore ###
+.ssh
+*.dist
+*.bak
+*.tmp
+
+.pass
+
+### project based specifyed ignores ###
+*kubeconfig*
+cluster-*
+
+### customer ignores on daily-builds ###
+/helm/rancher-charts-old/
+/helm/rancher-charts/regsync.yaml
+/helm/rancher-charts/.gitignore
+init_promox_tokens.sh
+
+/inventories/environment-local/*
+/helm/ranche-charts/_git/
+/helpers/php-fpm-runtime/source/
