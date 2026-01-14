@@ -1,0 +1,16 @@
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+   name: ops-l2-monitoring
+   ## uid: 146c05bf-f58d-4f80-883e-04e3f5301eb7
+   resourceVersion: '445066643'
+   creationTimestamp: '2026-01-14T09:46:41Z'
+   labels:
+      kubernetes.io/metadata.name: ops-l2-monitoring
+      openshift.io/description: 'Case on test-deployment of l2-monitoring-stack.'
+   annotations:
+      openshift.io/display-name: apps-monitoring
+      deprecated.daemonset.template.generation: '2'
+spec:
+   finalizers:
+      - kubernetes
