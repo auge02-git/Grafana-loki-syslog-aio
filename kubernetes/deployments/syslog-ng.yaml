@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ops-l2-monitoring
+  name: 'syslog-ng-apps'
+  annotations:
+    deployment.kubernetes.io/revision: '2'
+    aa.orga.customer: 'mdemo'
+    aa.orga.users: 'awolff2'
+    aa.orga.created: '2026-01-14T12:33:57Z'
+    aa.orga.unit: 'ref-130'
+    aa.orga.product: 'l2-monitoring-v2'
+    aa.orga.state: 'test'
+    aa.orga.version: 'v0.8.1-rc2'
+    aa.orga.notify: '2026-03-05T09:34:19Z'
+    aa.orga.destroyed: '2026-03-05T09:34:19Z'
+spec:
+  selector:
+    matchLabels:
+      app: syslog-ng-apps
+  replicas: 0
+  template:
+    metadata:
+      labels:
+        app: syslog-ng-apps
+    spec:
+      containers:
+        - name: container
+          image: >-
+            image-registry.openshift-image-registry.svc/demo/syslog-ng:latest
+          ports:
+            - containerPort: 4040
+              protocol: TCP
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
