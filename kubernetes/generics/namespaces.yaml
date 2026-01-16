@@ -1,0 +1,20 @@
+kind: Namespaces
+apiVersion: project.openshift.io/v1
+metadata:
+  name: ops-l2-app-monitoring
+  creationTimestamp: '2026-01-14T12:04:41Z'
+  labels:
+    kubernetes.io/metadata.name: ops-app-monitoring
+    openshift.io/description: 'Case on test-deployment of l2-monitoring-stack.'
+  annotations:
+    openshift.io/display-name: apps-monitoring
+    deprecated.daemonset.template.generation: '2'
+    aa.orga.customer: 'mdemo'
+    aa.orga.users: 'awolff2'
+    aa.orga.created: '2026-01-14T12:04:41Z'
+    aa.orga.unit: 'ref-130'
+    aa.orga.product: 'l2-monitoring-v2'
+    aa.orga.state: 'test'
+    aa.orga.version: 'v0.8.1-rc2'
+    aa.orga.notify: '2026-03-05T09:34:19Z'
+    aa.orga.destroyed: '2026-03-05T09:34:19Z'
